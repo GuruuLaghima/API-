@@ -1,82 +1,256 @@
-# API Users
 
-## Overview
-The API allows users to retrieve all of the users of the application in micro service through a REST architecture. This API will be mainly used for registed Accounts.
+# API Albums et Photos
 
-It will also create own users to recover data to the platform but is in no way related to the users collected via the crawling of profiles on Social Networks.
+## Vue d'ensemble
+Cette API permet la gestion des albums et des photos à travers une architecture REST. Elle permet de créer, lire, mettre à jour et supprimer des albums ainsi que des photos associées. Chaque album peut contenir plusieurs photos, et chaque photo est associée à un album.
 
-### [POST] Create user
-Allows the creation of a single user.
+---
 
-|                            |                  |
-|----------------------------|------------------|
-| Requires authentication ?  | No               |
-| Who can use it ?           | Owner and users  |
-| Response formats           | application/json |
+### Endpoints de l'API
 
-* HTTP request : POST → user/create
-
-#### Parameters :
-```javascript
-{
-  'firstname': String, // Optional
-  'lastname': Number, // Optional
-  'age': Number, // Optional
-  'city': String // Optional
-}
-```
-
-#### Response :
-```javascript
-  {
-    id: Object_ID,
-    firstname: String,
-    lastname: String,
-    age: Number,
-    city: String
-  }
-```
-
-### [POST] Show user
-Show an user by id.
+#### [POST] Créer un album
+Permet de créer un nouvel album.
 
 |                            |                  |
 |----------------------------|------------------|
-| Requires authentication ?  | No               |
-| Who can use it ?           | Owner and users  |
-| Response formats           | application/json |
+| Authentification requise ?  | Non              |
+| Qui peut l'utiliser ?       | Tous les utilisateurs |
+| Format de réponse           | application/json |
 
-* HTTP request : GET → user/show/:id
+* Requête HTTP : POST → `/albums`
 
-#### Parameters :
-```javascript
+##### Paramètres :
+```json
 {
-  id: String // Required
+  "title": "String",          // Requis
+  "description": "String"      // Optionnel
 }
 ```
 
-#### Response :
-```javascript
-  {
-    id: Object_ID,
-    firstname: String,
-    lastname: String,
-    age: Number,
-    city: String
-  }
+##### Réponse :
+```json
+{
+  "id": "Object_ID",
+  "title": "String",
+  "description": "String",
+  "photos": []                  // Liste vide par défaut
+}
 ```
 
-### Requirements
-* node 18
-* npm or yarn or pnpm
-* git
-* mongodb (please configure config.js for link mongodb)
+---
 
-### Install
-```npm i```
+#### [GET] Récupérer tous les albums
+Récupère la liste de tous les albums disponibles.
 
-### Production mode
-```npm run prod```
+|                            |                  |
+|----------------------------|------------------|
+| Authentification requise ?  | Non              |
+| Qui peut l'utiliser ?       | Tous les utilisateurs |
+| Format de réponse           | application/json |
 
-### Dev mode
-```npm run dev```
+* Requête HTTP : GET → `/albums`
+
+##### Réponse :
+```json
+[
+  {
+    "id": "Object_ID",
+    "title": "String",
+    "description": "String",
+    "photos": []                  // Contient les ID des photos associées
+  }
+]
+```
+
+---
+
+#### [GET] Récupérer un album par son ID
+Récupère les détails d'un album spécifique, y compris les photos associées.
+
+|                            |                  |
+|----------------------------|------------------|
+| Authentification requise ?  | Non              |
+| Qui peut l'utiliser ?       | Tous les utilisateurs |
+| Format de réponse           | application/json |
+
+* Requête HTTP : GET → `/albums/:id`
+
+##### Réponse :
+```json
+{
+  "id": "Object_ID",
+  "title": "String",
+  "description": "String",
+  "photos": [
+    {
+      "id": "Object_ID",
+      "title": "String",
+      "url": "String",
+      "description": "String"
+    }
+  ]
+}
+```
+
+---
+
+#### [PUT] Mettre à jour un album
+Met à jour un album existant.
+
+|                            |                  |
+|----------------------------|------------------|
+| Authentification requise ?  | Non              |
+| Qui peut l'utiliser ?       | Tous les utilisateurs |
+| Format de réponse           | application/json |
+
+* Requête HTTP : PUT → `/albums/:id`
+
+##### Paramètres :
+```json
+{
+  "title": "String",          // Optionnel
+  "description": "String"      // Optionnel
+}
+```
+
+##### Réponse :
+```json
+{
+  "id": "Object_ID",
+  "title": "String",
+  "description": "String",
+  "photos": []                  // Liste des photos associées
+}
+```
+
+---
+
+#### [DELETE] Supprimer un album
+Supprime un album spécifique par son ID.
+
+|                            |                  |
+|----------------------------|------------------|
+| Authentification requise ?  | Non              |
+| Qui peut l'utiliser ?       | Tous les utilisateurs |
+| Format de réponse           | application/json |
+
+* Requête HTTP : DELETE → `/albums/:id`
+
+##### Réponse :
+```json
+{
+  "message": "Album supprimé avec succès"
+}
+```
+
+---
+
+### Routes CRUD pour les Photos
+
+#### [POST] Ajouter une photo à un album
+Permet d'ajouter une nouvelle photo à un album spécifique.
+
+|                            |                  |
+|----------------------------|------------------|
+| Authentification requise ?  | Non              |
+| Qui peut l'utiliser ?       | Tous les utilisateurs |
+| Format de réponse           | application/json |
+
+* Requête HTTP : POST → `/albums/:albumId/photos`
+
+##### Paramètres :
+```json
+{
+  "title": "String",          // Requis
+  "url": "String",            // Requis
+  "description": "String"      // Optionnel
+}
+```
+
+##### Réponse :
+```json
+{
+  "id": "Object_ID",
+  "title": "String",
+  "url": "String",
+  "description": "String",
+  "album": "Album_ID"
+}
+```
+
+---
+
+#### [GET] Récupérer toutes les photos d'un album
+Récupère toutes les photos associées à un album spécifique.
+
+|                            |                  |
+|----------------------------|------------------|
+| Authentification requise ?  | Non              |
+| Qui peut l'utiliser ?       | Tous les utilisateurs |
+| Format de réponse           | application/json |
+
+* Requête HTTP : GET → `/albums/:albumId/photos`
+
+##### Réponse :
+```json
+[
+  {
+    "id": "Object_ID",
+    "title": "String",
+    "url": "String",
+    "description": "String"
+  }
+]
+```
+
+---
+
+#### [GET] Récupérer une photo spécifique d'un album
+Récupère une photo spécifique dans un album.
+
+|                            |                  |
+|----------------------------|------------------|
+| Authentification requise ?  | Non              |
+| Qui peut l'utiliser ?       | Tous les utilisateurs |
+| Format de réponse           | application/json |
+
+* Requête HTTP : GET → `/albums/:albumId/photos/:photoId`
+
+##### Réponse :
+```json
+{
+  "id": "Object_ID",
+  "title": "String",
+  "url": "String",
+  "description": "String",
+  "album": "Album_ID"
+}
+```
+
+---
+
+### Installation
+
+#### Pré-requis :
+- Node.js (version 18+)
+- npm (ou yarn)
+- Git
+- MongoDB (Configurer la connexion dans `config.js`)
+
+#### Installation du projet :
+```bash
+npm install
+```
+
+#### Mode de développement :
+```bash
+npm run dev
+```
+
+#### Mode production :
+```bash
+npm run prod
+```
+
+---
+
