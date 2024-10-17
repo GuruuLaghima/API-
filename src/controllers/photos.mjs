@@ -10,7 +10,6 @@ const Photos = class Photos {
     this.run();
   }
 
-  
   create() {
     this.app.post('/albums/:albumId/photos', async (req, res) => {
       try {
@@ -28,15 +27,14 @@ const Photos = class Photos {
         album.photos.push(savedPhoto._id);
         await album.save();
 
-        return res.status(200).json(savedPhoto); 
+        return res.status(200).json(savedPhoto);
       } catch (err) {
         console.error(`[ERROR] create photo -> ${err}`);
-        return res.status(500).json({ message: 'Internal Server error' }); 
+        return res.status(500).json({ message: 'Internal Server error' });
       }
     });
   }
 
-  
   listByAlbum() {
     this.app.get('/albums/:albumId/photos', async (req, res) => {
       try {
@@ -44,15 +42,14 @@ const Photos = class Photos {
         if (!album) {
           return res.status(404).json({ message: 'Album not found' });
         }
-        return res.status(200).json(album.photos); 
+        return res.status(200).json(album.photos);
       } catch (err) {
         console.error(`[ERROR] list photos -> ${err}`);
-        return res.status(500).json({ message: 'Internal Server error' }); 
+        return res.status(500).json({ message: 'Internal Server error' });
       }
     });
   }
 
-  
   showById() {
     this.app.get('/albums/:albumId/photos/:photoId', async (req, res) => {
       try {
@@ -60,15 +57,14 @@ const Photos = class Photos {
         if (!photo) {
           return res.status(404).json({ message: 'Photo not found in this album' });
         }
-        return res.status(200).json(photo); 
+        return res.status(200).json(photo);
       } catch (err) {
         console.error(`[ERROR] show photo -> ${err}`);
-        return res.status(500).json({ message: 'Internal Server error' }); 
+        return res.status(500).json({ message: 'Internal Server error' });
       }
     });
   }
 
-  
   updateById() {
     this.app.put('/albums/:albumId/photos/:photoId', async (req, res) => {
       try {
@@ -76,15 +72,14 @@ const Photos = class Photos {
         if (!photo) {
           return res.status(404).json({ message: 'Photo not found in this album' });
         }
-        return res.status(200).json(photo); 
+        return res.status(200).json(photo);
       } catch (err) {
         console.error(`[ERROR] update photo -> ${err}`);
-        return res.status(500).json({ message: 'Internal Server error' }); 
+        return res.status(500).json({ message: 'Internal Server error' });
       }
     });
   }
 
-  
   deleteById() {
     this.app.delete('/albums/:albumId/photos/:photoId', async (req, res) => {
       try {
@@ -97,15 +92,14 @@ const Photos = class Photos {
         album.photos.pull(photo._id);
         await album.save();
 
-        return res.status(200).json(photo); 
+        return res.status(200).json(photo);
       } catch (err) {
         console.error(`[ERROR] delete photo -> ${err}`);
-        return res.status(500).json({ message: 'Internal Server error' }); 
+        return res.status(500).json({ message: 'Internal Server error' });
       }
     });
   }
 
-  
   run() {
     this.create();
     this.listByAlbum();

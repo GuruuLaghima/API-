@@ -1,12 +1,11 @@
-// Dependencies
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
+import { RateLimitExpress } from 'express-rate-limiter-core';  
 
-// Core
 import config from './config.mjs';
 import routes from './controllers/routes.mjs';
 
@@ -62,6 +61,16 @@ const Server = class Server {
   }
 
   middleware() {
+    const limiter = RateLimitExpress({
+      strategyCache: 'IN_MEMORY',  
+      policy: {
+        type: "REQUEST_PER_MINUTES",  
+        periodWindow: 1,  
+        maxRequests: 100,  
+      },
+    });
+
+    this.app.use(limiter.apply);  
     this.app.use(compression());
     this.app.use(cors());
     this.app.use(bodyParser.urlencoded({ extended: true }));

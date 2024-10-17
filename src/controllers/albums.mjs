@@ -8,7 +8,6 @@ const Albums = class Albums {
     this.run();
   }
 
-  
   create() {
     this.app.post('/albums', (req, res) => {
       try {
@@ -25,7 +24,6 @@ const Albums = class Albums {
     });
   }
 
-  
   list() {
     this.app.get('/albums', (req, res) => {
       try {
@@ -41,11 +39,9 @@ const Albums = class Albums {
     });
   }
 
-  
   showById() {
     this.app.get('/albums/:id', async (req, res) => {
       try {
-        
         const album = await this.AlbumModel.findById(req.params.id).populate('photos');
         if (!album) {
           return res.status(404).json({ message: 'Album not found' });
@@ -58,7 +54,6 @@ const Albums = class Albums {
     });
   }
 
-  
   updateById() {
     this.app.put('/albums/:id', (req, res) => {
       try {
@@ -74,7 +69,6 @@ const Albums = class Albums {
     });
   }
 
-  
   deleteById() {
     this.app.delete('/albums/:id', (req, res) => {
       try {
@@ -90,7 +84,6 @@ const Albums = class Albums {
     });
   }
 
-  
   run() {
     this.create();
     this.list();
